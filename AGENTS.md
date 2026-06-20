@@ -154,7 +154,11 @@ the full procedure; the short form:
 3. **Prioritize by P0** (blast radius × patch latency); record the ranking **and cutoff** — the
    coverage contract.
 4. **Deep-review the top hotspots with Review mode**, unchanged. Fan-out per module × dimension is an
-   opt-in accelerator on hosts with subagents — it changes throughput, not method or standards.
+   opt-in accelerator on hosts with subagents — it changes throughput, not method or standards. **Tier the
+   model to the work where the host allows it** — cheapest capable model for the §1 mechanical sweep,
+   mid-tier for mid-P0 hotspots, the strongest model for top-P0; the same P0 ranking that sets the cutoff
+   sets the tier. On a single-model host the bands collapse to one model and the method is unchanged. See
+   `references/audit-mode-playbook.md`.
 5. **Report** (default `AUDIT.md`, or the given path) + inline summary, **coverage first**: what was
    deep-reviewed, what got the cheap pass, what was excluded and why; findings grouped by dimension,
    each citing its principle + boundary + calibrated verb; and the audit's own blind spots. Coverage is

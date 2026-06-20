@@ -6,7 +6,7 @@ user-invocable: true
 argument-hint: [help | review [PR# | diff | path] | audit [path] | distill [repo-path-or-name] | craft question]
 metadata:
   author: Chris Graffagnino
-  version: 0.2.0
+  version: 0.3.0
   status: v1 — four craft dimensions graduated (P0–P12) from a ten-repo corpus
 ---
 
@@ -173,7 +173,7 @@ Audit is a **whole-codebase craft review**: Review mode with a P0 prioritization
 1. **Scope, altitude, budget.** Acquire the tree (never from memory) and size it. Hold craft altitude — architectural characterization → hand off to `software-architect`. Declare the coverage target *before* reading. A repo small enough to fit in context is audited exhaustively (skip steps 2–3's sampling — the prioritization machinery is overhead below that threshold).
 2. **Cheap repo-wide sweep → hotspot map.** Run `review-mode-playbook.md` §2 tripwires across the whole tree (mechanical, scales ~linearly); add `references/ai-slop-antipatterns.md` §3 if the code is AI-generated. Tripwires are *places to look*, not verdicts.
 3. **Prioritize by P0** (blast radius × patch latency). Record the ranking **and the cutoff** — together they are the audit's coverage contract.
-4. **Deep-review the top hotspots with Review mode**, unchanged — only *which* regions earn the rigor changes, not the rigor itself. Fan-out per module × dimension is an opt-in accelerator on hosts with subagents: it changes throughput, not method or standards.
+4. **Deep-review the top hotspots with Review mode**, unchanged — only *which* regions earn the rigor changes, not the rigor itself. Fan-out per module × dimension is an opt-in accelerator on hosts with subagents: it changes throughput, not method or standards. **Tier the model to the work** — the same P0 ranking that sets the cutoff sets each region's model tier (cheapest model for the §1 sweep, mid-tier for mid-P0, frontier for top-P0), not just its rigor; on read-heavy audits the cheap tiers' lower input price is the main saving. See `references/audit-mode-playbook.md`.
 5. **Report** (default `AUDIT.md`, or the given path) + a short inline summary, **coverage first**: what was deep-reviewed, what got the cheap pass, what was excluded and why; findings grouped by dimension, each citing its principle (P0–P12) + boundary condition + calibrated verb; and the audit's own blind spots. State which dimensions the codebase did *not* surface.
 
 ## Definition of done
