@@ -1,0 +1,7 @@
+# Machine-local Claude Code settings — never publish
+.claude/
+
+# OS / editor cruft
+.DS_Store
+*.swp
+*~
