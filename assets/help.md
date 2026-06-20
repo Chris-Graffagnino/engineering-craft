@@ -14,6 +14,7 @@ the *shape of the system*.
 |---|---|
 | *(none)* or a question | **Apply mode** — answer a craft question, leading with the relevant distilled practices and their boundary conditions. |
 | `review [PR# \| diff \| path]` | **Review mode** — judge how a specific change is *built* against the craft practices. Adds the craft layer on top of a correctness review; it does not replace one. |
+| `audit [path]` | **Audit mode** — whole-codebase craft review: P0-prioritized coverage, Review-mode judgment per hotspot, and an honest "what was not covered" report (default `AUDIT.md`). `/audit` is an alias. |
 | `distill [repo]` | **Distill mode** — extract reusable craft practices from an exemplar repository into the corpus. |
 | `help` | Print this text. |
 

@@ -78,8 +78,13 @@ Review standalone and defers to it for the rest.
 |---|---|
 | `/engineering-craft <question>` | **Apply** — answer a craft question with the relevant distilled practices and their boundary conditions. |
 | `/engineering-craft review [PR# \| diff \| path]` | **Review** — judge how a specific change is *built*. Adds the craft layer; does not replace a correctness review. |
+| `/engineering-craft audit [path]` (alias `/audit`) | **Audit** — whole-codebase craft review: P0-prioritized coverage, Review-mode judgment per hotspot, and an honest "what was not covered" report (default `AUDIT.md`). |
 | `/engineering-craft distill [repo]` | **Distill** — extract reusable craft practices from an exemplar repo into the corpus. |
 | `/engineering-craft help` | Print the help card ([`assets/help.md`](assets/help.md)). |
+
+> The `/audit` alias is optional — add a personal/project command that delegates to it (e.g. a one-line
+> `.claude/commands/audit.md` containing `Run /engineering-craft audit $ARGUMENTS`). On Codex and other
+> agents, invoke Audit mode by asking for a whole-codebase craft review (see [`AGENTS.md`](AGENTS.md)).
 
 ## Repository layout
 
@@ -96,8 +101,9 @@ references/
   _extract-<repo>.md          per-repo evidence (the provenance for every practice)
   _extraction-template.md     the instrument Distill mode fills for a new repo
   _progress.md                corpus development log
-  ai-slop-antipatterns.md     } literature-sourced extensions (see below)
-  review-mode-playbook.md     }
+  ai-slop-antipatterns.md     } operational / literature layers (see below) —
+  review-mode-playbook.md     } extend Review & Audit modes; they add no
+  audit-mode-playbook.md      } principles to the convergence core
   _research-ai-slop-corpus.md }
 ```
 
@@ -128,7 +134,8 @@ honest "this is out of scope for craft."
 
 v1 — all four dimensions graduated (P0–P12), each by three independent witnesses, across a
 ten-repo corpus. Held candidates (recorded in the principles index) graduate as further
-witnesses corroborate them.
+witnesses corroborate them. Operational layers — Review, **Audit** (whole-codebase craft review), and
+the AI-slop inversion — extend the modes without adding to the graduated core.
 
 ## License
 

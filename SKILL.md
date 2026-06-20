@@ -3,7 +3,7 @@ name: engineering-craft
 description: Engineering-craft practices for building, testing, and structuring code at the implementation and component level — distilled from study of gold-standard open-source codebases. Covers testing and correctness discipline, error and failure handling, extensibility and module/plugin boundaries, backpressure and resource control, observability instrumentation, API and backward-compatibility discipline, and implementation simplicity. Use this skill whenever the user asks how to build, structure, or test a specific component; what the best-practice or "how do the best codebases do it" approach is for a code-level concern (testing strategy, error handling, plugin/extension design, flow control, logging/metrics, API stability); asks for a craft-level review of an implementation; or asks to distill engineering practices from a particular repository — even if they don't say the word "craft". Do NOT use this skill for system-level architecture decisions: service boundaries, monolith-vs-microservices, sagas or distributed transactions, consistency-model selection, bounded-context analysis, ADRs, team topology, or whole-codebase architectural review — the separate software-architect skill owns those; hand off to it.
 license: MIT
 user-invocable: true
-argument-hint: [help | review [PR# | diff | path] | distill [repo-path-or-name] | craft question]
+argument-hint: [help | review [PR# | diff | path] | audit [path] | distill [repo-path-or-name] | craft question]
 metadata:
   author: Chris Graffagnino
   version: 0.1.0
@@ -30,7 +30,7 @@ These two skills share an epistemic backbone (evidence calibration, "what would 
 
 **Hand off to `software-architect`** the moment a question becomes about service granularity, distributed transactions/sagas, consistency-model selection, bounded contexts, team topology, or a whole-codebase *architectural* review. **Hand off to this skill** the moment it becomes about how to implement, test, extend, instrument, or simplify a component. When a request spans both, name the seam and run them in sequence (architecture decides the boundary; craft builds inside it).
 
-Do **not** fire this skill on "analyze this codebase" — that phrase is `software-architect`'s Analyze mode. This skill's codebase-facing mode is **Distill** (extract reusable practices *from* an exemplar), which is a different intent.
+"Analyze this codebase" at the *architectural* altitude (system / service shapes) is `software-architect`'s Analyze mode — hand it off. This skill has **two codebase-facing modes at the *craft* altitude**: **Distill** (extract reusable practices *from* an exemplar, into the corpus) and **Audit** (whole-codebase craft review of *this* repo). Route by intent: reusable practice → Distill; judge how *this* code is built → Audit; system shape → `software-architect`.
 
 ## When to use this skill
 
@@ -55,6 +55,7 @@ Do **not** fire this skill on "analyze this codebase" — that phrase is `softwa
 - **No arguments** — greet, ask what craft question or task they have, proceed with *Apply mode*.
 - **`help`** — print `assets/help.md` verbatim and stop.
 - **`review`** (optionally a PR number, `diff`, or a path) — run *Review mode* below against that change set.
+- **`audit`** (optionally a path; default repo root) — run *Audit mode* below: a whole-codebase craft review. `/audit` is an alias.
 - **`distill`** (optionally a repo path or name) — run *Distill mode* below against that repo.
 - **A natural-language craft question** — proceed with *Apply mode*.
 
@@ -74,6 +75,7 @@ Each dimension is distilled from one or more exemplar repos and lives in its own
 | `references/ai-slop-antipatterns.md` | AI-slop anti-patterns — the **inversion layer** (load in Apply/Review when the change is AI-generated) | cross-industry literature (studies/RCT/essays), **not** exemplar repos | ☑ drafted; **nothing graduated, by design** — maps slop → P0–P12; §4 process cluster HELD |
 | `references/_research-ai-slop-corpus.md` | Evidence/provenance layer for the AI-slop reference (the `_extract-*.md` analog) | — | ☑ done |
 | `references/review-mode-playbook.md` | **Review-mode operational layer** — how-to-run-the-review lenses, cheap tripwires, output triage (companion to the four knowledge dimensions) | adapted from Cursor's `thermo-nuclear-code-quality-review` (operational review prompt), re-grounded in corpus principles — **not** exemplar repos | ☑ drafted; **nothing graduated** — operationalizes P0/P5/P10/P1–P4 |
+| `references/audit-mode-playbook.md` | **Audit-mode operational layer** — whole-codebase coverage: P0 prioritization front-end + Review-mode judgment per hotspot + coverage-honesty report (load in Audit mode) | operationalizes P0 + Review mode at repo scale — **not** exemplar repos | ☑ drafted; **nothing graduated** — coverage layer over P0 + P1–P12 |
 
 A practice only graduates into a dimension reference (and ultimately the principles index) once it passes the **convergence test** below. Until then it lives as a candidate in the per-repo extraction notes.
 
@@ -162,6 +164,18 @@ Review mode is Apply mode aimed at a *diff* rather than a question: judge how a 
 5. **Hold altitude.** If a finding is actually architectural (service boundary, consistency-model choice), name the seam and **hand off to `software-architect`** rather than reviewing it here.
 6. **Report**, grouped by dimension and ordered by how strongly each practice applies. State explicitly which craft dimensions the diff did **not** touch, so the review's scope is honest. If no distilled practice covers a concern, say so rather than inventing one — offer Distill mode on a relevant exemplar.
 
+## Audit mode (Review mode at repo scale)
+
+**Invoked by:** the `audit` argument — `audit [path]` (default: repo root); `/audit` is an alias.
+
+Audit is a **whole-codebase craft review**: Review mode with a P0 prioritization front-end and a coverage-honesty back-end. A whole repo never fits one judgment, so audit spends a bounded attention budget where blast radius is highest and reports exactly what that budget did and did not cover — **coverage is declared, never implied.** It adds no new principles; it operationalizes **P0** (the prioritization function) and **Review mode** (the per-hotspot judgment). **Load `references/audit-mode-playbook.md`** for the full procedure; the short form:
+
+1. **Scope, altitude, budget.** Acquire the tree (never from memory) and size it. Hold craft altitude — architectural characterization → hand off to `software-architect`. Declare the coverage target *before* reading. A repo small enough to fit in context is audited exhaustively (skip steps 2–3's sampling — the prioritization machinery is overhead below that threshold).
+2. **Cheap repo-wide sweep → hotspot map.** Run `review-mode-playbook.md` §2 tripwires across the whole tree (mechanical, scales ~linearly); add `references/ai-slop-antipatterns.md` §3 if the code is AI-generated. Tripwires are *places to look*, not verdicts.
+3. **Prioritize by P0** (blast radius × patch latency). Record the ranking **and the cutoff** — together they are the audit's coverage contract.
+4. **Deep-review the top hotspots with Review mode**, unchanged — only *which* regions earn the rigor changes, not the rigor itself. Fan-out per module × dimension is an opt-in accelerator on hosts with subagents: it changes throughput, not method or standards.
+5. **Report** (default `AUDIT.md`, or the given path) + a short inline summary, **coverage first**: what was deep-reviewed, what got the cheap pass, what was excluded and why; findings grouped by dimension, each citing its principle (P0–P12) + boundary condition + calibrated verb; and the audit's own blind spots. State which dimensions the codebase did *not* surface.
+
 ## Definition of done
 
 A response from this skill is complete when:
@@ -171,6 +185,7 @@ A response from this skill is complete when:
 - Verbs match the **evidence class** (Verified / Codified / Documented / Inferred / …).
 - In Distill mode: thesis stated, three tiers inventoried, candidates carry evidence + counter-case + convergence, and rejected/over-engineered items were captured.
 - In Review mode: the change set was actually obtained (not reviewed from memory), each finding cites its backing principle/reference with the boundary condition, craft and architecture were kept separate, and the dimensions the diff did *not* touch were named.
+- In Audit mode: the tree was actually acquired (not audited from memory); the P0 prioritization **and cutoff** were stated as the coverage contract; each finding cites its principle with a boundary condition and a calibrated verb; craft altitude was held (architecture handed off); and what was *not* covered was named — **coverage declared, never implied.**
 - What is *not* covered by the corpus has been named, not papered over.
 
 ## Status
@@ -178,4 +193,4 @@ A response from this skill is complete when:
 **The v1 corpus build is complete.** All four dimension references are drafted and `_principles-index.md` holds the convergence-validated core:
 1. ✅ Distill mode run on all four seed repos (SQLite, Envoy, Redis, Kubernetes) **plus six corroborating witnesses** (FoundationDB → testing; Erlang/OTP + Temporal → robustness; Linux + VS Code → extensibility; Go → simplicity) — ten `_extract-<repo>.md` files (SQLite also carries a §6 simplicity cross-witness).
 2. ✅ Convergence test run; the four dimension references and `_principles-index.md` (**P0–P12**) written. **All four dimensions have graduated principles** — testing (P1–P4), simplicity (P5–P6, Redis+SQLite+Go), robustness (P7–P9, Kubernetes+Erlang/OTP+Temporal), and **extensibility (P10 narrow-versioned-contract, P11 declared-posture, P12 governed-lifecycle — Envoy+Linux+VS Code)**. Each dimension is graduated by *three independent witnesses*, with explicit holds where convergence is partial.
-3. The skill grows by running **Distill mode** on new exemplars: held candidates (tracked in `_principles-index.md`) graduate only when a third independent witness corroborates them — optional hardening, since every dimension is already graduated. Two literature-sourced references, `ai-slop-antipatterns.md` and `review-mode-playbook.md`, extend Review mode without adding to the convergence core.
+3. The skill grows by running **Distill mode** on new exemplars: held candidates (tracked in `_principles-index.md`) graduate only when a third independent witness corroborates them — optional hardening, since every dimension is already graduated. Three operational / literature-sourced references — `ai-slop-antipatterns.md`, `review-mode-playbook.md`, and `audit-mode-playbook.md` (whole-codebase **Audit mode**) — extend Review/Audit without adding to the convergence core.
