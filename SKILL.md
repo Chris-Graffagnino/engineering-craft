@@ -6,7 +6,7 @@ user-invocable: true
 argument-hint: [help | review [PR# | diff | path] | audit [path] | distill [repo-path-or-name] | craft question]
 metadata:
   author: Chris Graffagnino
-  version: 0.1.0
+  version: 0.2.0
   status: v1 — four craft dimensions graduated (P0–P12) from a ten-repo corpus
 ---
 
