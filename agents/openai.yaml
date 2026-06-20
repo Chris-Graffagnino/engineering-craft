@@ -1,0 +1,7 @@
+interface:
+  display_name: "Engineering Craft"
+  short_description: "Review how code is built, tested, and hardened"
+  default_prompt: "Use $engineering-craft to review how this component is built, tested, and hardened."
+
+policy:
+  allow_implicit_invocation: true

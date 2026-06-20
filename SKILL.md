@@ -1,12 +1,10 @@
 ---
 name: engineering-craft
-description: Engineering-craft practices for building, testing, and structuring code at the implementation and component level — distilled from study of gold-standard open-source codebases. Covers testing and correctness discipline, error and failure handling, extensibility and module/plugin boundaries, backpressure and resource control, observability instrumentation, API and backward-compatibility discipline, and implementation simplicity. Use this skill whenever the user asks how to build, structure, or test a specific component; what the best-practice or "how do the best codebases do it" approach is for a code-level concern (testing strategy, error handling, plugin/extension design, flow control, logging/metrics, API stability); asks for a craft-level review of an implementation; or asks to distill engineering practices from a particular repository — even if they don't say the word "craft". Do NOT use this skill for system-level architecture decisions: service boundaries, monolith-vs-microservices, sagas or distributed transactions, consistency-model selection, bounded-context analysis, ADRs, team topology, or whole-codebase architectural review — the separate software-architect skill owns those; hand off to it.
+description: Engineering-craft practices for building, testing, and structuring code at the implementation and component level — distilled from gold-standard open-source codebases. Covers testing and correctness, error and failure handling, extensibility and module/plugin boundaries, backpressure and resource control, observability, API and backward-compatibility discipline, and implementation simplicity. Use whenever the user asks how to build, structure, or test a component; the best-practice or "how do the best codebases do it" approach for a code-level concern (testing, error handling, flow control, logging/metrics, API stability); for a craft-level review; or to distill engineering practices from a repository — even if they don't say "craft". Do NOT use for system-level architecture decisions — service boundaries, monolith-vs-microservices, distributed transactions, consistency models, bounded contexts, ADRs, or team topology — the software-architect skill owns those; hand off to it.
 license: MIT
-user-invocable: true
-argument-hint: [help | review [PR# | diff | path] | audit [path] | distill [repo-path-or-name] | craft question]
 metadata:
   author: Chris Graffagnino
-  version: 0.3.0
+  version: 0.3.1
   status: v1 — four craft dimensions graduated (P0–P12) from a ten-repo corpus
 ---
 
