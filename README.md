@@ -1,8 +1,8 @@
 # Engineering Craft
 
-A Claude skill for **implementation-level engineering craft** — the practices that
+A Claude skill (and Codex / `AGENTS.md` adapter) for **implementation-level engineering craft** — the practices that
 distinguish gold-standard codebases at the level *below* system architecture. It is the
-craft complement to a software-architecture skill: that judges the *shape of the system*;
+craft complement to [`software-architect`](https://github.com/Chris-Graffagnino/software-architect): that judges the *shape of the system*;
 this judges *how the code is built* — testing and correctness, failure handling,
 implementation simplicity, extension/plugin boundaries, resource control, observability,
 and API/backward-compatibility discipline.
@@ -47,7 +47,9 @@ the per-repo evidence.
 
 ## Installation
 
-This is a Claude skill. Clone it where Claude discovers skills:
+### As a Claude skill
+
+Clone it where Claude discovers skills:
 
 ```sh
 # Personal (all projects)
@@ -59,6 +61,16 @@ git clone https://github.com/<you>/engineering-craft .claude/skills/engineering-
 
 The directory name should match the skill name (`engineering-craft`). It is then
 invocable as `/engineering-craft`.
+
+### Using with Codex / other agents
+
+The distilled corpus in [`references/`](references/) is model-agnostic; only the packaging was
+Claude-specific. [`AGENTS.md`](AGENTS.md) is a portable adapter that runs the same corpus on Codex and
+other `AGENTS.md`-aware agents (Cursor, Gemini CLI, …): it replaces the slash-command invocation,
+progressive disclosure, and architecture handoff with `AGENTS.md`-world equivalents. Either point your
+project's own `AGENTS.md` at a checkout of this repo, or copy `AGENTS.md`'s body in and fix the
+`references/` paths. `SKILL.md` stays the canonical method — `AGENTS.md` inlines enough to run Apply and
+Review standalone and defers to it for the rest.
 
 ## Usage
 
@@ -72,7 +84,8 @@ invocable as `/engineering-craft`.
 ## Repository layout
 
 ```
-SKILL.md                      operating instructions + the distillation method
+SKILL.md                      operating instructions + the distillation method (Claude entry point)
+AGENTS.md                     portable adapter for Codex / other AGENTS.md-aware agents
 assets/help.md                the help card
 references/
   _principles-index.md        capstone: convergence-validated principles P0–P12
@@ -102,13 +115,14 @@ practitioner essays) rather than exemplar repos — and they are honestly labele
 onto the existing P0–P12 (AI slop is the *negative space* of the corpus) and operationalize
 the review, without claiming the same standard of evidence as the dimensions.
 
-## Companion: a software-architecture skill
+## Companion: the `software-architect` skill
 
 This skill deliberately owns only the *code/component* altitude. Questions about service
 boundaries, monolith-vs-microservices, distributed transactions, consistency models,
-bounded contexts, ADRs, or team topology are *architecture*, and the skill hands them off
-to a software-architecture skill at that seam. A companion architecture skill is optional —
-without one, the handoff still reads as an honest "this is out of scope for craft."
+bounded contexts, ADRs, or team topology are *architecture*, and the skill hands them off to
+its companion, [`software-architect`](https://github.com/Chris-Graffagnino/software-architect),
+at that seam. Installing the companion is optional — without it, the handoff still reads as an
+honest "this is out of scope for craft."
 
 ## Status
 
